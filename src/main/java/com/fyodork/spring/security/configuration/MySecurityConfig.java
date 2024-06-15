@@ -1,5 +1,6 @@
 package com.fyodork.spring.security.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,12 +13,22 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import javax.sql.DataSource;
+
 @EnableWebSecurity
 public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    DataSource dataSource;
+
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        UserBuilder userBuilder=User.withDefaultPasswordEncoder();
+
+        auth.jdbcAuthentication().dataSource(dataSource);
+
+
+        /* UserBuilder userBuilder=User.withDefaultPasswordEncoder();
         auth.inMemoryAuthentication()
                 .withUser(userBuilder.username("ivan")
                         .password("1")
@@ -27,7 +38,9 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
                         .roles("HR"))
                 .withUser(userBuilder.username("kfy")
                         .password("3")
-                        .roles("Manager","HR"));
+                        .roles("Manager","HR"));*/
+
+
 
 
     }
